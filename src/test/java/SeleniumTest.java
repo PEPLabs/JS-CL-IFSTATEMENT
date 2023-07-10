@@ -9,31 +9,40 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 public class SeleniumTest {
 
-    private WebDriver driver;
+    private WebDriver webDriver;
 
     @Before
     public void setUp() {
         // Set up ChromeDriver path
-        System.setProperty("webdriver.chrome.driver", "./chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "/driver/chromedriver");//linux_64
+
+        // Get file
+        File file = new File("IfStatement.html");
+        String path = "file://" + file.getAbsolutePath();
 
         // Create a new ChromeDriver instance
-        driver = new ChromeDriver();
-        File file = new File("IfStatement.html");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("headless");
+        webDriver = new ChromeDriver(options);
+
+
         // Open the HTML file
-        driver.get(file.getAbsolutePath());
+        webDriver.get(path);
     }
+
     @Test
     public void testIncrementButton() {
 
         // Find the increment button and click it
-        WebElement incrementButton = driver.findElement(By.id("counter"));
+        WebElement incrementButton = webDriver.findElement(By.id("counter"));
         incrementButton.click();
 
         // Find the display element and verify the incremented value
-        WebElement displayElement = driver.findElement(By.id("display"));
+        WebElement displayElement = webDriver.findElement(By.id("display"));
         assertEquals("2", displayElement.getText());
         incrementButton.click();
 
@@ -45,11 +54,11 @@ public class SeleniumTest {
     public void testCheckButton() {
 
         // Find the checkButton and click it
-        WebElement countButton = driver.findElement(By.id("counter"));
+        WebElement countButton = webDriver.findElement(By.id("counter"));
         countButton.click();
 
         // Find the lightText element and verify the text based on the initial value of lightOn
-        WebElement evenOrOddTextElement = driver.findElement(By.id("evenOrOddText"));
+        WebElement evenOrOddTextElement = webDriver.findElement(By.id("evenOrOddText"));
         String expectedText = "even"; // Assuming number is initially 1, and 2 after a click
         assertEquals(expectedText, evenOrOddTextElement.getText());
         
@@ -58,12 +67,12 @@ public class SeleniumTest {
     public void testCheckButton2Clicks() {
 
         // Find the checkButton and click it
-        WebElement countButton = driver.findElement(By.id("counter"));
+        WebElement countButton = webDriver.findElement(By.id("counter"));
         countButton.click();
         countButton.click();
 
         // Find the lightText element and verify the text based on the initial value of lightOn
-        WebElement evenOrOddTextElement = driver.findElement(By.id("evenOrOddText"));
+        WebElement evenOrOddTextElement = webDriver.findElement(By.id("evenOrOddText"));
         String expectedText = "odd"; // Assuming number is initially 1, and 2 after a click
         assertEquals(expectedText, evenOrOddTextElement.getText());
         
@@ -72,6 +81,6 @@ public class SeleniumTest {
     @After
     public void tearDown() {
         // Close the browser
-        driver.quit();
+        webDriver.quit();
     }
 }
